@@ -2,9 +2,8 @@
 
 name: xmpl CI/CD
 
-on:
-  push:
-    branches: [ "main" ]
+on:                         # run this workflow on the following events
+   [workflow_dispatch] 
       
    # paths:
    #   - 'src/**'
