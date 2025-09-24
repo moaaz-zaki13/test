@@ -54,9 +54,11 @@ jobs:
 
         - name: Download all artifacts
           uses: actions/download-artifact@v4
-          
-        - name: Display coverage summary
-          run:  echo "Coverage reports downloaded"
+
+        - name: Show coverage summary  # gives prief about the coverage
+          run: |
+            echo "Coverage Summary:"
+            cat */coverage/coverage-summary.json | jq '.total'
 
 
   ########################## New Job to analyze using CodeQL ##########################       
