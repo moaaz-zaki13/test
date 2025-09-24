@@ -1,0 +1,98 @@
+# this is a work flow on push and merge
+
+name: xmpl CI/CD
+
+on:
+  push:
+    branches: [ "qa" ]
+      
+   # paths:
+   #   - 'src/**'
+
+ 
+jobs:
+
+  unit-test:
+       runs-on: ubuntu-latest
+
+       strategy:
+            matrix:
+              fail-fast: false
+              node-version: [18.x, 20.x]  # Test on Node.js 18 and 20
+
+       steps:
+
+          - name: Checkout code   
+            uses: actions/checkout@v4     # Download repo files into runner
+
+          - name: Setup Node.js
+            uses: actions/setup-node@v3 # Ready action to install Node.js
+            with:
+                node-version: ${{ matrix.node-version }} # Use version from matrix
+
+          - name: Install dependencies
+            run: npm install            # Install npm packages from package.json
+
+          - name: Run tests
+            run: npm test               # Run your unit tests (e.g., Jest)
+
+
+          - name: Upload coverage report
+            uses: actions/upload-artifact@v3   # Action to save files as artifacts
+            with:
+              name: test-results-${{ matrix.node-version }}      # Artifact name shown in GitHub UI
+              path: coverage     
+              retention-days: 1
+
+
+ ########################## New Job to download coverage report ##########################
+
+  coverage-summary:
+        runs-on: ubuntu-latest
+        needs: unit-test               # This job depends on the 'unit-test' job
+
+        steps:
+
+        - name: Download all artifacts
+          uses: actions/download-artifact@v3
+          
+        - name: Display coverage summary
+          run:  echo "Coverage reports downloaded"
+
+
+  ########################## New Job to analyze using CodeQL ##########################       
+analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    permissions:                 # minimal permissions the job needs
+      actions: read              # allow reading actions metadata
+      contents: read             # allow reading repo contents
+      security-events: write     # allow writing security/code-scanning events
+
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript' ]       # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}    
+
+
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    # Analayzing the code 
+    -  name: Perform CodeQL Analysis
+       uses: github/codeql-action/analyze@v3  # run the actual security/quality scan
+
