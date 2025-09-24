@@ -16,8 +16,8 @@ jobs:
        runs-on: ubuntu-latest
 
        strategy:
+            fail-fast: false
             matrix:
-              fail-fast: false
               node-version: [18.x, 20.x]  # Test on Node.js 18 and 20
 
        steps:
