@@ -38,7 +38,7 @@ jobs:
 
 
           - name: Upload coverage report
-            uses: actions/upload-artifact@v3   # Action to save files as artifacts
+            uses: actions/upload-artifact@v4   # Action to save files as artifacts
             with:
               name: test-results-${{ matrix.node-version }}      # Artifact name shown in GitHub UI
               path: coverage     
