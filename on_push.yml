@@ -4,7 +4,7 @@ name: xmpl CI/CD
 
 on:
   push:
-    branches: [ "qa" ]
+    branches: [ "main" ]
       
    # paths:
    #   - 'src/**'
