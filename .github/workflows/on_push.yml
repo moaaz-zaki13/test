@@ -41,27 +41,11 @@ jobs:
             with:
               name: test-results-${{ matrix.node-version }}      # Artifact name shown in GitHub UI
               path: coverage     
-              retention-days: 1
+              retention-days: 5
 
 
- ########################## New Job to download coverage report ##########################
-
-  coverage-summary:
-        runs-on: ubuntu-latest
-        needs: unit-test               # This job depends on the 'unit-test' job
-
-        steps:
-
-        - name: Download all artifacts
-          uses: actions/download-artifact@v4
-
-        - name: Show coverage summary  # gives prief about the coverage
-          run: |
-            echo "Coverage Summary:"
-            cat */coverage/coverage-summary.json | jq '.total'
-
-
-  ########################## New Job to analyze using CodeQL ##########################       
+  ########################## New Job to analyze using CodeQL ##########################   
+     
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
