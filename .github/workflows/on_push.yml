@@ -61,7 +61,7 @@ jobs:
 
 
   ########################## New Job to analyze using CodeQL ##########################       
-analyze:
+  analyze:
     name: Analyze
     runs-on: ubuntu-latest
 
