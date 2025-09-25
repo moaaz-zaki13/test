@@ -36,11 +36,18 @@ jobs:
             run:  npm test -- --json --outputFile=test-results.json     # Run your unit tests (e.g., Jest)
 
 
-          - name: Upload coverage report
-            uses: actions/upload-artifact@v4   # Action to save files as artifacts
+          
+          - name: Prepare artifact folder
+            run: |
+              mkdir -p test-artifact
+              cp -r coverage test-artifact/coverage
+              cp test-results.json test-artifact/
+
+          - name: Upload test results
+            uses: actions/upload-artifact@v4
             with:
-              name: test-results-${{ matrix.node-version }}      # Artifact name shown in GitHub UI
-              path: coverage     
+              name: test-results-${{ matrix.node-version }}
+              path: test-artifact
               retention-days: 5
 
 
