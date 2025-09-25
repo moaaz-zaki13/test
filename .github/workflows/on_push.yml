@@ -117,7 +117,9 @@ jobs:
     # Analayzing the code 
     -  name: Perform CodeQL Analysis
        uses: github/codeql-action/analyze@v3  # run the actual security/quality scan
-
+       with:
+          output: codeql-results
+          format: sarif
     # Prepare the SARIF file for upload
 
     - name: Prepare CodeQL artifact folder
