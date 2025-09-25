@@ -160,3 +160,44 @@ jobs:
         name: codeql-results
         path: codeql-results
         retention-days: 5
+
+
+########################## New Job to scan with Trivy ##########################
+
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Trivy FS Scan                     # Scaning dependencies and file systems
+        uses: aquasecurity/trivy-action@0.20.0  # Runs and installs the trivey on the runner
+        with:
+          scan-type: fs               # scan project files/dependencies
+          severity: HIGH,CRITICAL     # only fail on High/Critical
+          ignore-unfixed: true        # ignore issues with no fix yet
+          exit-code: 1                # fail CI if vulnerabilities found
+          format: table
+          output: trivy-fs-report.txt
+      
+      - name: Trivy Image Scan (optional)
+        continue-on-error: true                 # do not fail the job if this step fails
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: image
+          image-ref: ghcr.io/OWNER/IMAGE:TAG
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1
+          format: table
+          output: trivy-image-report.txt
+
+      - name: Upload Trivy Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-reports
+          path: |
+            trivy-fs-report.txt
+            trivy-image-report.txt
