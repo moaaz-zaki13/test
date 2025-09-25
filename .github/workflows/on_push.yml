@@ -48,11 +48,9 @@ jobs:
             if: always()
             uses: actions/upload-artifact@v4
             with:
-              name: test-results
+              name: test-results-${{ matrix.node-version }}
               path: test-artifact
               retention-days: 5
-
-
 
   combine-reports:
       runs-on: ubuntu-latest
@@ -61,11 +59,12 @@ jobs:
         - name: Download all artifacts
           uses: actions/download-artifact@v4
           with:
-            name: test-results
+            pattern: test-results-*
             path: combined
 
-        - name: List structure
-          run: tree combined/
+        - name: View combined results
+          run: ls -la combined/
+
 
 
 
