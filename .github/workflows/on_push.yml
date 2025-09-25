@@ -43,13 +43,6 @@ jobs:
               cp -r coverage test-artifact/coverage
               cp test-results.json test-artifact/
 
-          - name: Upload test results
-            uses: actions/upload-artifact@v4
-            with:
-              name: test-results-${{ matrix.node-version }}
-              path: test-artifact
-              retention-days: 5
-
 
   combine-reports:
     runs-on: ubuntu-latest
