@@ -44,6 +44,14 @@ jobs:
               cp test-results.json test-artifact/
 
 
+          - name: Upload temporary results
+            if: always()   # ensures artifact is uploaded for combine job
+            uses: actions/upload-artifact@v4
+            with:
+              name: temp-${{ matrix.node-version }}
+              path: test-artifact
+
+
   combine-reports:
     runs-on: ubuntu-latest
     needs: unit-test
@@ -51,13 +59,13 @@ jobs:
       - name: Download Node 18 results
         uses: actions/download-artifact@v4
         with:
-          name: test-results-18.x
+          name: temp-18.x        
           path: combined/18
 
       - name: Download Node 20 results
         uses: actions/download-artifact@v4
         with:
-          name: test-results-20.x
+          name: temp-20.x        
           path: combined/20
 
       - name: Merge reports
