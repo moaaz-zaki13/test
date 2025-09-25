@@ -81,11 +81,6 @@ jobs:
           retention-days: 5
 
 
-
-
-
-
-
   ########################## New Job to analyze using CodeQL ##########################   
      
   analyze:
@@ -122,4 +117,19 @@ jobs:
     # Analayzing the code 
     -  name: Perform CodeQL Analysis
        uses: github/codeql-action/analyze@v3  # run the actual security/quality scan
+
+    # Prepare the SARIF file for upload
+
+    - name: Prepare CodeQL artifact folder
+      run: |
+        mkdir -p codeql-reports
+        cp codeql-results.sarif codeql-reports/codeql-results.sarif
+ 
+    # Upload the CodeQL results as an artifact
+    - name: Upload CodeQL results
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-results
+        path: codeql-reports
+        retention-days: 5
 
