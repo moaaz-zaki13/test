@@ -105,6 +105,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Upload ESLint results
+        uses: actions/upload-artifact@v4
+        with:
+          name: eslint-results
+
 
 
   ########################## New Job to analyze using CodeQL ##########################   
