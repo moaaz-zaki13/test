@@ -51,33 +51,33 @@ jobs:
               retention-days: 5
 
 
-combine-reports:
-  runs-on: ubuntu-latest
-  needs: unit-test
-  steps:
-    - name: Download Node 18 results
-      uses: actions/download-artifact@v4
-      with:
-        name: test-results-18.x
-        path: combined/18
+  combine-reports:
+    runs-on: ubuntu-latest
+    needs: unit-test
+    steps:
+      - name: Download Node 18 results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results-18.x
+          path: combined/18
 
-    - name: Download Node 20 results
-      uses: actions/download-artifact@v4
-      with:
-        name: test-results-20.x
-        path: combined/20
+      - name: Download Node 20 results
+        uses: actions/download-artifact@v4
+        with:
+          name: test-results-20.x
+          path: combined/20
 
-    - name: Merge reports
-      run: |
-        mkdir -p all-tests
-        cp -r combined/* all-tests/
+      - name: Merge reports
+        run: |
+          mkdir -p all-tests
+          cp -r combined/* all-tests/
 
-    - name: Upload combined artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-all
-        path: all-tests
-        retention-days: 5
+      - name: Upload combined artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-all
+          path: all-tests
+          retention-days: 5
 
 
 
