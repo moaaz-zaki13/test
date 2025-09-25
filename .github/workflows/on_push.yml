@@ -45,25 +45,40 @@ jobs:
 
 
           - name: Upload temporary results
-            if: always()
+            if: always()   # ensures artifact is uploaded for combine job
             uses: actions/upload-artifact@v4
             with:
-              name: test-results-${{ matrix.node-version }}
+              name: temp-${{ matrix.node-version }}
               path: test-artifact
-              retention-days: 5
+
 
   combine-reports:
-      runs-on: ubuntu-latest
-      needs: unit-test
-      steps:
-        - name: Download all artifacts
-          uses: actions/download-artifact@v4
-          with:
-            pattern: test-results-*
-            path: combined
+    runs-on: ubuntu-latest
+    needs: unit-test
+    steps:
+      - name: Download Node 18 results
+        uses: actions/download-artifact@v4
+        with:
+          name: temp-18.x        
+          path: combined/18
 
-        - name: View combined results
-          run: ls -la combined/
+      - name: Download Node 20 results
+        uses: actions/download-artifact@v4
+        with:
+          name: temp-20.x        
+          path: combined/20
+
+      - name: Merge reports
+        run: |
+          mkdir -p all-tests
+          cp -r combined/* all-tests/
+
+      - name: Upload combined artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-all
+          path: all-tests
+          retention-days: 5
 
 
 
