@@ -52,6 +52,10 @@ jobs:
               path: test-artifact
 
 
+
+
+########################## New Job to combine reports in one file ##########################
+
   combine-reports:
     runs-on: ubuntu-latest
     needs: unit-test
@@ -79,6 +83,28 @@ jobs:
           name: test-results-all
           path: all-tests
           retention-days: 5
+
+
+  ########################## New Job to lint using ESLINT ##########################
+
+lint:
+  runs-on: ubuntu-latest
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x   # you can also make this a matrix like tests
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run ESLint
+      run: npm run lint
+
 
 
   ########################## New Job to analyze using CodeQL ##########################   

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/moaaz-zaki13/test#readme",
   "devDependencies": {
+    "eslint": "^9.36.0",
     "jest": "^30.1.3"
   }
 }
