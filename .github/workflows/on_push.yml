@@ -120,12 +120,11 @@ jobs:
        with:
           output: codeql-results
           upload: never            # stops auto-upload, keeps only local files
-           
+
     # Upload the CodeQL results as an artifact
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v4
       with:
         name: codeql-results
-        path: codeql-reports
+        path: codeql-results
         retention-days: 5
-
