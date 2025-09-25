@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eslint-report
-          path: eslint-report.xml
+          path: eslint-report.json
 
 
 
