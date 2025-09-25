@@ -119,14 +119,8 @@ jobs:
        uses: github/codeql-action/analyze@v3  # run the actual security/quality scan
        with:
           output: codeql-results
-          format: sarif
-    # Prepare the SARIF file for upload
-
-    - name: Prepare CodeQL artifact folder
-      run: |
-        mkdir -p codeql-reports
-        cp codeql-results.sarif codeql-reports/codeql-results.sarif
- 
+          upload: never            # stops auto-upload, keeps only local files
+           
     # Upload the CodeQL results as an artifact
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v4
