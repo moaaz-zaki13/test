@@ -176,7 +176,7 @@ jobs:
         uses: aquasecurity/trivy-action@0.20.0  # Runs and installs the trivey on the runner
         with:
           scan-type: fs               # scan project files/dependencies
-          severity: HIGH,CRITICAL     # only fail on High/Critical
+          severity: LOW,MEDIUM,HIGH,CRITICAL    # what severity to check
           ignore-unfixed: true        # ignore issues with no fix yet
           exit-code: 1                # fail CI if vulnerabilities found
           format: table
