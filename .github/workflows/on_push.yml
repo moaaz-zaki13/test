@@ -45,7 +45,7 @@ jobs:
 
 
           - name: Upload temporary results
-            if: always()   # ensures artifact is uploaded for combine job
+            if: always()   
             uses: actions/upload-artifact@v4
             with:
               name: test-results-${{ matrix.node-version }}  
@@ -73,6 +73,7 @@ jobs:
         run:  npm run lint -- --format json --output-file eslint-report.json
 
       - name: Upload ESLint results
+        if: always()  # ← UPLOAD EVEN IF TESTS FAIL
         uses: actions/upload-artifact@v4
         with:
           name: eslint-report
@@ -122,6 +123,7 @@ jobs:
 
     # Upload the CodeQL results as an artifact
     - name: Upload CodeQL results
+      if: always()  
       uses: actions/upload-artifact@v4
       with:
         name: codeql-results
@@ -141,6 +143,7 @@ jobs:
 
       - name: Trivy FS Scan                     # Scaning dependencies and file systems
         uses: aquasecurity/trivy-action@0.20.0  # Runs and installs the trivey on the runner
+        continue-on-error: true  # ← CONTINUE EVEN IF VULNERABILITIES FOUND
         with:
           scan-type: fs               # scan project files/dependencies
           severity: LOW,MEDIUM,HIGH,CRITICAL    # what severity to check
@@ -162,6 +165,7 @@ jobs:
           output: trivy-image-report.txt
 
       - name: Upload Trivy Reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trivy-reports
@@ -174,6 +178,7 @@ jobs:
   create-dashboard:
     runs-on: ubuntu-latest
     needs: [unit-test, lint, analyze, trivy-scan]
+    if: always()
     steps:
       - name: Checkout code (with scripts)
         uses: actions/checkout@v4
