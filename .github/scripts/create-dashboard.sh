@@ -29,7 +29,7 @@ create_dashboard() {
     <div class="dashboard">
         <div class="header">
             <h1> CI/CD Reports Dashboard</h1>
-            <p>Generated on: date</p>
+            
 EOF
 
     add_unit_test_section
