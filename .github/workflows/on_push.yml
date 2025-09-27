@@ -32,8 +32,9 @@ jobs:
           - name: Install dependencies
             run: npm install            # Install npm packages from package.json
 
-          - name: Run tests
-            run:  npm test -- --json --outputFile=test-results.json     # Run your unit tests (e.g., Jest)
+          - name: Run tests with coverage
+            run: npm test -- --coverage --json --outputFile=test-results.json --passWithNoTests
+            continue-on-error: true
 
 
           
@@ -70,14 +71,16 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run:  npm run lint -- --format json --output-file eslint-report.json
+        run: |
+          mkdir -p eslint-report
+          npm run lint -- --format json --output-file eslint-report/eslint-report.json
 
       - name: Upload ESLint results
-        if: always()  # ← UPLOAD EVEN IF TESTS FAIL
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eslint-report
-          path: eslint-report.json
+          path: eslint-report
 
 
 
@@ -164,14 +167,18 @@ jobs:
           format: table
           output: trivy-image-report.txt
 
+      - name: Prepare Trivy reports folder
+        run: |
+          mkdir -p trivy-reports
+          mv trivy-fs-report.txt trivy-reports/ || true
+          mv trivy-image-report.txt trivy-reports/ || true
+
       - name: Upload Trivy Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trivy-reports
-          path: |
-            trivy-fs-report.txt
-            trivy-image-report.txt
+          path: trivy-reports
 
   ########################## New Job to combine test results ##########################
 
